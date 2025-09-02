@@ -27,6 +27,8 @@ public class Main {
 			return;
 		}
 
+		if(playerCount > 2) System.out.println("Only 2 players are supported at this time");
+
 		
 		BaseAI[] players = new BaseAI[playerCount];
 
@@ -55,7 +57,37 @@ public class Main {
 			System.out.print(" " + players[i].getName());
 		}
 		System.out.println();
+		System.out.println("Starting game...");
 
+		Board board = new Board(20);
+		int turn = 0;
+		int currentPlayer = 0;
 		
+		while(!gameIsOver(players)) {
+			players[currentPlayer].findAvailableMoves(board);
+			if(players[currentPlayer].getAvailableMoveCount() > 0) 
+			{
+				List<Point> move = players[currentPlayer].getMove(board);
+				if(!board.addPiece(move, currentPlayer)) {
+					System.out.println("Invalid Move Played!");
+					return;
+				}
+			}
+
+			currentPlayer++;
+			if(currentPlayer >= playerCount) {
+				currentPlayer %= playerCount;
+				turn++;
+			}
+			System.out.println("Player " + currentPlayer + "'s turn.");
+			board.displayBoard();
+			Thread.sleep(1000);
+			System.out.println();
+		}
     }
+
+	private static boolean gameIsOver(BaseAI[] players) {
+		return false;
+	}
+
 }
